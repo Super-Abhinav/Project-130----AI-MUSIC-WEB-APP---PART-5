@@ -1,51 +1,47 @@
-leftWristX = 0;
-leftWristY = 0;
-rightWristX = 0;
-rightWristY = 0;
+Peter_pan_song="";
+Harry_potter_theme_song="";
+rightWrist_x = 0;
+rightWrist_y = 0;
+leftWrist_x = 0;
+leftWrist_y = 0;
 scoreleftWrist = 0;
 scorerightWrist = 0;
-peter_pan_song = "";
-harry_potter_theme_song = "";
-song_peter_pan_song = "";
-song_harry_potter_theme_song = "";
+song_Peter_pan = "";
+song_Harry_potter_theme = "";
 
-function setup() {
-    canvas = createCanvas(600,500);
+function setup(){
+    canvas = createCanvas(600,530);
     canvas.center();
 
     video = createCapture(VIDEO);
     video.hide();
 
-    poseNet = ml5.poseNet(video, modelLoaded);
-    poseNet.on('pose', gotPoses);
+    poseNet = ml5.poseNet(video,modelLoaded);
+    poseNet.on('pose',gotposes);
 }
 
-function modelLoaded() {
-    console.log("PoseNet is initialized!");
+function preload(){
+    Peter_pan_song = loadSound("music2.mp3");
+    Harry_potter_theme_song = loadSound("music.mp3");
 }
 
-function preload() {
-    harry_potter_theme_song = loadSound("music.mp3");
-    peter_pan_song = loadSound("music2.mp3");
-}
-
-function draw() {
-    image(video, 0, 0, 600, 500);
+function draw(){
+    image(video,0,0,600,530);
 
     fill("#00ff00");
     stroke("#ff0000");
 
-    song_peter_pan_song = peter_pan_song.isPlaying();
-    console.log(song_peter_pan_song);
+    song_Peter_pan = Peter_pan_song.isPlaying();
+    console.log(song_Peter_pan);
 
-    song_harry_potter_theme_song = harry_potter_theme_song.isPlaying();
-    console.log(song_harry_potter_theme_song);
+    song_Harry_potter_theme = Harry_potter_theme_song.isPlaying();
+    console.log(song_Harry_potter_theme);
 
     if(scoreleftWrist > 0.2){
-        circle(leftWristX,leftWristY,20);
-        harry_potter_theme_song.stop();
-        if(song_peter_pan_song == false){
-            peter_pan_song.play();
+        circle(leftWrist_x,leftWrist_y,20);
+        Harry_potter_theme_song.stop();
+        if(song_Peter_pan == false){
+            Peter_pan_song.play();
         }
         else{
             console.log("Song Name: Peter Pan Song");
@@ -55,9 +51,9 @@ function draw() {
 
     if(scorerightWrist > 0.2){
         circle(rightWrist_x,rightWrist_y,20);
-        peter_pan_song.stop();
-        if(song_harry_potter_theme_song == false){
-            harry_potter_theme_song.play();
+        Peter_pan_song.stop();
+        if(song_Harry_potter_theme == false){
+            Harry_potter_theme_song.play();
         }
         else{
             console.log("Song Name: Harry Potter Theme Song");
@@ -66,8 +62,12 @@ function draw() {
     }
 }
 
-function gotPoses(results) {
-    if (results.length > 0) {
+function modelLoaded(){
+    console.log("poseNet Is Initialized");
+}
+
+function gotposes(results){
+    if(results.length > 0){
         console.log(results);
 
         scoreleftWrist = results[0].pose.keypoints[9].score;
@@ -76,12 +76,12 @@ function gotPoses(results) {
         scorerightWrist = results[0].pose.keypoints[10].score;
         console.log(scorerightWrist);
 
-        leftWristX = results[0].pose.leftWrist.x;
-        leftWristY = results[0].pose.leftWrist.y;
-        console.log("Left Wrist X = " + leftWristX + " Left Wrist Y = " + leftWristY);
+        leftWrist_x = results[0].pose.leftWrist.x;
+        leftWrist_y = results[0].pose.leftWrist.y;
+        console.log("leftWrist_x = "+leftWrist_x+" leftWrist_y = "+leftWrist_y);
 
-        rightWristX = results[0].pose.rightWrist.x;
-        rightWristY = results[0].pose.rightWrist.y;
-        console.log("Right Wrist X = " + rightWristX + " Right Wrist Y = " + rightWristY);
+        rightWrist_x = results[0].pose.rightWrist.x;
+        rightWrist_y = results[0].pose.rightWrist.y;
+        console.log("rightWrist_x = "+rightWrist_x+" rightWrist_y = "+rightWrist_y);
     }
 }
